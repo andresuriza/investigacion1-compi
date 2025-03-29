@@ -1,3 +1,5 @@
 program miprograma {
-	sqrt 9;
+	sqrt(9);
+	println true && true && true;
+	stdev(50,40,30);
 }

@@ -32,7 +32,8 @@ sentence returns [ASTNode node]:
 	| conditional {$node = $conditional.node;}
 	| var_decl {$node = $var_decl.node;}
 	| var_assign {$node = $var_assign.node;}
-	| sqrt {$node = $sqrt.node;};
+	| sqrt {$node = $sqrt.node;}
+	| stdev {$node = $stdev.node;};
 	
 println returns [ASTNode node]: PRINTLN expression SEMICOLON
 	{$node = new Println($expression.node);};
@@ -61,11 +62,21 @@ var_assign returns [ASTNode node]:
 	
 sqrt returns [ASTNode node]:
 	SQRT expression SEMICOLON {$node = new SquareRoot($expression.node);};
+	
+stdev returns [ASTNode node]:
+	{List<ASTNode> numbers = new ArrayList<ASTNode>();}
+	STDEV PAR_OPEN 
+	(n1 = expression{numbers.add($n1.node);} COMMA)* n2 = expression{numbers.add($n2.node);}
+	PAR_CLOSE SEMICOLON
+	{
+		$node = new StandardDev(numbers);
+	};
 
 /* Expresion con prioridad a factores y term parentesis */
 expression returns [ASTNode node]:
 	t1 = factor {$node = $t1.node;}
-	(PLUS t2=factor {$node = new Addition($node, $t2.node);})*;
+	(AND t2 = factor {$node = new And($node, $t2.node);})*
+	| (PLUS t2=factor {$node = new Addition($node, $t2.node);})*;
 
 /* Factor evalua multiplicaciones con prioridad */
 factor returns [ASTNode node]: 
@@ -84,6 +95,7 @@ PRINTLN: 'println';
 IF: 'if';
 ELSE: 'else';
 SQRT: 'sqrt';
+STDEV: 'stdev';
 
 PLUS: '+';
 MINUS: '-';
@@ -110,6 +122,7 @@ PAR_OPEN: '(';
 PAR_CLOSE: ')';
 
 SEMICOLON: ';';
+COMMA: ',';
 
 BOOLEAN: 'true' | 'false';
 

@@ -60,6 +60,12 @@ public interface SimpleVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSqrt(SimpleParser.SqrtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link SimpleParser#stdev}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStdev(SimpleParser.StdevContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link SimpleParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
